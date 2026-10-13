@@ -1,0 +1,82 @@
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.form-field__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.form-field__label--required::after {
+  content: ' *';
+  color: var(--color-danger);
+}
+
+.form-field__input,
+.form-field__select,
+.form-field__textarea {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.form-field__input:focus,
+.form-field__select:focus,
+.form-field__textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.form-field__input::placeholder,
+.form-field__textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.form-field__input--error,
+.form-field__select--error,
+.form-field__textarea--error {
+  border-color: var(--color-danger);
+}
+
+.form-field__input--error:focus,
+.form-field__select--error:focus,
+.form-field__textarea--error:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-soft);
+}
+
+.form-field__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-8);
+  cursor: pointer;
+}
+
+.form-field__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-field__error {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+}
+
+.form-field__input:disabled,
+.form-field__select:disabled,
+.form-field__textarea:disabled {
+  background: var(--color-bg);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}

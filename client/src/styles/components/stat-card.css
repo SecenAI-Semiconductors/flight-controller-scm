@@ -1,0 +1,86 @@
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+  min-width: 0;
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.stat-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.stat-card__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.stat-card__value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.stat-card__value--null {
+  color: var(--color-text-tertiary);
+}
+
+/* ── Loading skeleton ──────────────────────────────── */
+.stat-card--loading .stat-card__value {
+  width: 60px;
+  height: 28px;
+  background: linear-gradient(90deg, var(--color-bg) 25%, var(--color-border-light) 50%, var(--color-bg) 75%);
+  background-size: 200% 100%;
+  animation: stat-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+.stat-card--loading .stat-card__label {
+  width: 80px;
+  height: 14px;
+  background: linear-gradient(90deg, var(--color-bg) 25%, var(--color-border-light) 50%, var(--color-bg) 75%);
+  background-size: 200% 100%;
+  animation: stat-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+  color: transparent;
+}
+
+@keyframes stat-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Error state ───────────────────────────────────── */
+.stat-card--error {
+  border-color: var(--color-danger-soft);
+}
+
+.stat-card__error-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+}
