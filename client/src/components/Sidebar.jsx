@@ -23,16 +23,6 @@ const NAV_GROUPS = [
     label: 'Operations',
     items: [
       {
-        to: '/design',
-        label: 'Design',
-        icon: (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-          </svg>
-        ),
-      },
-      {
         to: '/units',
         label: 'Units',
         icon: (
@@ -40,6 +30,16 @@ const NAV_GROUPS = [
             <rect x="4" y="4" width="16" height="16" rx="2" />
             <path d="M9 9h6v6H9z" />
             <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" />
+          </svg>
+        ),
+      },
+      {
+        to: '/design',
+        label: 'Design',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
           </svg>
         ),
       },
