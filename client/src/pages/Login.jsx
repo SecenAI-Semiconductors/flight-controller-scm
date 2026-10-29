@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import { ADMIN_ROLES } from '../App';
 import FormField from '../components/FormField';
 import Button from '../components/Button';
 import '../styles/components/login.css';
 
 export default function Login() {
-  const { user, login } = useAuth();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Already logged in
-  if (user) return <Navigate to="/" replace />;
 
   const handleChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -24,7 +24,14 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      await login(form.email, form.password);
+      const { user: loggedInUser } = await login(form.email, form.password);
+      if (ADMIN_ROLES.includes(loggedInUser.role)) {
+        // Return admin to the page they were trying to reach, or /admin
+        const from = location.state?.from?.pathname ?? '/admin';
+        navigate(from, { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       setError(
         err.response?.data?.error?.message || 'Login failed. Please try again.'
@@ -39,11 +46,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-card__header">
           <div className="login-card__logo">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+            <img src="/images/secenai-logo-icon.png" alt="SECENAI" className="login-card__logo-img" />
           </div>
           <h1 className="login-card__title">FC-SCM</h1>
           <p className="login-card__subtitle">Sign in to your account</p>

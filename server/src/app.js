@@ -5,6 +5,9 @@ const auth = require('./middleware/auth');
 const errorHandler = require('./middleware/errorHandler');
 const { globalLimiter } = require('./middleware/rateLimiter');
 const authRoutes = require('./routes/auth');
+const supplierRoutes = require('./routes/suppliers');
+const partRoutes = require('./routes/parts');
+const productRoutes = require('./routes/products');
 
 const app = express();
 
@@ -31,8 +34,11 @@ app.use('/api/auth', authRoutes);
 // ── Auth wall ──────────────────────────────────────────────
 app.use('/api', auth);
 
-// ── Protected routes (added in Checkpoint B) ──────────────
-// Route modules will be mounted here.
+// ── Protected routes ─────────────────────────────────────────
+app.use('/api/admin/suppliers', supplierRoutes);
+app.use('/api/admin/parts', partRoutes);
+app.use('/api/admin/products', productRoutes);
+
 
 // ── Health check (protected — behind auth wall) ───────────
 app.get('/api/health', (req, res) => {

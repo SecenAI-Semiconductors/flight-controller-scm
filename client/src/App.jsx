@@ -1,65 +1,50 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import AppLayout from './components/AppLayout';
 import Login from './pages/Login';
+import StorePage from './pages/store/StorePage';
+
+// ── Admin pages ────────────────────────────────────────────────────────────
+import ExecutiveOverview from './pages/admin/ExecutiveOverview';
+import Products from './pages/admin/Products';
+import ProductDetail from './pages/admin/ProductDetail';
+import Procurement from './pages/admin/Procurement';
+import Manufacturing from './pages/admin/Manufacturing';
+import Inventory from './pages/admin/Inventory';
+import SalesChannels from './pages/admin/SalesChannels';
+import Orders from './pages/admin/Orders';
+import Support from './pages/admin/Support';
+import Warranty from './pages/admin/Warranty';
+import Settings from './pages/admin/Settings';
+import Suppliers from './pages/admin/Suppliers';
+import Parts from './pages/admin/Parts';
+
+// ── Internal roles that can reach the admin dashboard ─────────────────────
+export const ADMIN_ROLES = ['admin', 'supply_chain', 'warehouse', 'quality', 'sales'];
 
 /**
- * Protects routes: redirects to /login if not authenticated.
- * Shows nothing while loading to avoid flash.
+ * Guards admin routes. Unauthenticated users are sent to /login with the
+ * current location saved in state so Login can return them after sign-in.
+ * Authenticated non-admin roles (customers) are sent to /store.
  */
-function ProtectedRoute({ children }) {
+function RequireAdminRole({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
-  return children;
-}
+  const location = useLocation();
 
-/** Placeholder page for routes not yet implemented. */
-function PlaceholderPage({ title, description }) {
-  // Imported inline to avoid circular dependency during Checkpoint A
-  // These will be split into separate files in Checkpoint C
-  return (
-    <div>
-      <div className="page-header">
-        <div className="page-header__text">
-          <h1 className="page-header__title">{title}</h1>
-          <p className="page-header__subtitle">{description}</p>
-        </div>
-      </div>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'var(--space-16) var(--space-8)',
-        textAlign: 'center',
-      }}>
-        <div style={{
-          width: 56,
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--color-accent-soft)',
-          color: 'var(--color-accent)',
-          borderRadius: 'var(--radius-lg)',
-          marginBottom: 'var(--space-5)',
-        }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M8 12h8M12 8v8" />
-          </svg>
-        </div>
-        <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, marginBottom: 'var(--space-2)' }}>
-          Coming Soon
-        </h3>
-        <p style={{ fontSize: 'var(--font-size-base)', color: 'var(--color-text-secondary)', maxWidth: 360 }}>
-          This section is under development and will be available in a future update.
-        </p>
-      </div>
-    </div>
-  );
+  if (loading) return null;
+
+  if (!user) {
+    // Pass `from` so Login can redirect back after a successful sign-in
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (!ADMIN_ROLES.includes(user.role)) {
+    // Authenticated but wrong side of the app — send to storefront
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 }
 
 export default function App() {
@@ -67,24 +52,58 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* ── Public auth route ──────────────────────────────────────── */}
           <Route path="/login" element={<Login />} />
+
+          {/* ── Public storefront ─────────────────────────────────────── */}
+          <Route path="/" element={<StorePage />} />
+
+          {/* /store redirects to root storefront */}
+          <Route path="/store" element={<Navigate to="/" replace />} />
+          <Route path="/store/*" element={<Navigate to="/" replace />} />
+
+          {/* ── Admin dashboard (internal roles only) ─────────────────── */}
           <Route
+            path="/admin"
             element={
-              <ProtectedRoute>
+              <RequireAdminRole>
                 <AppLayout />
-              </ProtectedRoute>
+              </RequireAdminRole>
             }
           >
-            <Route index element={<PlaceholderPage title="Overview" description="Dashboard overview and key metrics" />} />
-            <Route path="units" element={<PlaceholderPage title="Units" description="Flight controller unit registry" />} />
-            <Route path="design" element={<PlaceholderPage title="Design Revisions" description="Hardware and firmware design tracking" />} />
-            <Route path="manufacturing" element={<PlaceholderPage title="Manufacturing" description="Batch production tracking" />} />
-            <Route path="inventory" element={<PlaceholderPage title="Inventory" description="Stock and listing management" />} />
-            <Route path="orders" element={<PlaceholderPage title="Orders" description="Order tracking and fulfillment" />} />
-            <Route path="feedback" element={<PlaceholderPage title="Feedback" description="Customer ratings and reviews" />} />
-            <Route path="issues" element={<PlaceholderPage title="Issues" description="Customer issue tracking and resolution" />} />
-            <Route path="warranty" element={<PlaceholderPage title="Warranty" description="Warranty management and claims" />} />
+            {/* Default admin landing */}
+            <Route index element={<ExecutiveOverview />} />
+
+            {/* Product & Supply */}
+            <Route path="product-lifecycle" element={<Products />} />
+            <Route path="product-lifecycle/:id" element={<ProductDetail />} />
+            <Route path="procurement" element={<Procurement />} />
+            <Route path="suppliers" element={<Suppliers />} />
+            <Route path="parts" element={<Parts />} />
+
+            {/* Production */}
+            <Route path="manufacturing" element={<Manufacturing />} />
+            <Route path="inventory" element={<Inventory />} />
+
+            {/* Sales & Delivery */}
+            <Route path="sales-channels" element={<SalesChannels />} />
+            <Route path="orders" element={<Orders />} />
+
+            {/* After-sales */}
+            <Route path="support" element={<Support />} />
+            <Route path="warranty" element={<Warranty />} />
+
+            {/* Settings */}
+            <Route path="settings" element={<Settings />} />
+
+            {/* Legacy redirects (keep old bookmarks working) */}
+            <Route path="design" element={<Navigate to="/admin/product-lifecycle" replace />} />
+            <Route path="units" element={<Navigate to="/admin/manufacturing" replace />} />
+            <Route path="feedback" element={<Navigate to="/admin/support" replace />} />
+            <Route path="issues" element={<Navigate to="/admin/support" replace />} />
           </Route>
+
+          {/* Catch-all → storefront (RequireAdminRole guards /admin itself) */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

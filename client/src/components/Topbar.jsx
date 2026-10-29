@@ -16,11 +16,7 @@ export default function Topbar({ onMenuToggle }) {
         </button>
         <div className="topbar__brand">
           <div className="topbar__logo">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+            <img src="/images/secenai-logo-icon.png" alt="SECENAI" className="topbar__logo-img" />
           </div>
           <div>
             <div className="topbar__title">FC-SCM</div>

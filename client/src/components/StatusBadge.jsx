@@ -25,6 +25,17 @@ const STATUS_COLOR_MAP = {
   // Order statuses
   placed: 'info',
   cancelled: 'danger',
+  // Roadmap phases
+  phase_1: 'info',
+  phase_2: 'accent',
+  phase_3: 'warning',
+  phase_5: 'neutral',
+  // Product statuses
+  draft: 'neutral',
+  discontinued: 'danger',
+  // Revision statuses
+  released: 'success',
+  obsolete: 'neutral',
 };
 
 /**

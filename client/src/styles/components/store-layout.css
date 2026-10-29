@@ -1,0 +1,13 @@
+﻿/* ── Store Layout ──────────────────────────────────────────────────────────── */
+
+.store-layout {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #111827;
+  font-family: var(--font-family);
+}
+
+.store-layout__main {
+  /* offset for fixed header */
+  padding-top: 68px;
+}
