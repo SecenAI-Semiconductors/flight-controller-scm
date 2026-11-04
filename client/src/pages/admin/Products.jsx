@@ -81,6 +81,7 @@ export default function Products() {
 
   // ── Deactivate state ────────────────────────────────────────────────────────
   const [deactivating, setDeactivating] = useState(null);
+  const [activating,   setActivating]   = useState(null);
 
   const openCreate = () => {
     setEditing(null);
@@ -141,6 +142,19 @@ export default function Products() {
     }
   };
 
+  const handleActivate = async (product) => {
+    if (!window.confirm(`Activate product "${product.sku} — ${product.name}"?`)) return;
+    setActivating(product._id);
+    try {
+      await productsApi.activate(product._id);
+      refetch();
+    } catch (err) {
+      alert(err.response?.data?.error?.message ?? 'Activation failed.');
+    } finally {
+      setActivating(null);
+    }
+  };
+
   const handleSort = (key, order) => {
     setSortBy(key);
     setSortOrder(order);
@@ -191,7 +205,7 @@ export default function Products() {
                 >
                   Edit
                 </Button>
-                {row.active && (
+                {row.active ? (
                   <Button
                     variant="danger"
                     size="sm"
@@ -199,6 +213,15 @@ export default function Products() {
                     onClick={(e) => { e.stopPropagation(); handleDeactivate(row); }}
                   >
                     Deactivate
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    loading={activating === row._id}
+                    onClick={(e) => { e.stopPropagation(); handleActivate(row); }}
+                  >
+                    Activate
                   </Button>
                 )}
               </span>

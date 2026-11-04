@@ -4,7 +4,6 @@ import { useAuth } from '../../hooks/useAuth';
 import { useFetch } from '../../hooks/useFetch';
 import { productsApi } from '../../api/admin';
 import { formatINR } from '../../utils/currency';
-import { SHOW_PARTS_SUPPLIERS } from '../../config/features';
 import PageHeader from '../../components/PageHeader';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
@@ -130,7 +129,7 @@ export default function ProductDetail() {
 
   // ── Parts for BOM line dropdown ─────────────────────────────────────────────
   const { data: partsData } = useFetch('/admin/parts', {
-    params: { limit: 200, sortBy: 'partNumber', sortOrder: 'asc' },
+    params: { limit: 100, sortBy: 'partNumber', sortOrder: 'asc' },
   });
   const activeParts = (partsData?.data ?? []).filter((p) => p.active);
   const partOptions = activeParts.map((p) => ({ value: p._id, label: `${p.partNumber} — ${p.name}` }));
@@ -354,16 +353,14 @@ export default function ProductDetail() {
 
   // ── BOM columns ──────────────────────────────────────────────────────────────
   const bomColumns = [
-    { key: 'partNumber', label: 'Part #',   sortable: false, render: (_v, row) => SHOW_PARTS_SUPPLIERS ? (row.part?.partNumber ?? '—') : '—' },
-    { key: 'partName',   label: 'Name',     sortable: false, render: (_v, row) => SHOW_PARTS_SUPPLIERS ? (row.part?.name ?? '—') : '—' },
+    { key: 'partNumber', label: 'Part #',   sortable: false, render: (_v, row) => (row.part?.partNumber ?? '—') },
+    { key: 'partName',   label: 'Name',     sortable: false, render: (_v, row) => (row.part?.name ?? '—') },
     { key: 'quantity',   label: 'Qty',      sortable: false },
     {
       key: 'supplier',
       label: 'Supplier',
       sortable: false,
-      render: (_v, row) => SHOW_PARTS_SUPPLIERS
-        ? (row.supplier ? `${row.supplier.code} — ${row.supplier.name}` : '—')
-        : '—',
+      render: (_v, row) => row.supplier ? `${row.supplier.code} — ${row.supplier.name}` : '—',
     },
     { key: 'referenceDesignators', label: 'Ref des.', sortable: false, render: (v) => v || '—' },
     {

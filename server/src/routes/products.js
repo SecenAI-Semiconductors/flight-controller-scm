@@ -15,6 +15,7 @@ const {
   createProduct,
   updateProduct,
   deactivateProduct,
+  activateProduct,
   listRevisions,
   getRevision,
   createRevision,
@@ -41,6 +42,7 @@ router.get('/:id', requireRole(...READ_ROLES), getProduct);
 router.post('/', requireRole(...WRITE_ROLES), validate(productCreateSchema), createProduct);
 router.patch('/:id', requireRole(...WRITE_ROLES), validate(productUpdateSchema), updateProduct);
 router.patch('/:id/deactivate', requireRole(...WRITE_ROLES), deactivateProduct);
+router.patch('/:id/activate',   requireRole(...WRITE_ROLES), activateProduct);
 
 // ── Revisions ─────────────────────────────────────────────────────────────────
 router.get('/:id/revisions', requireRole(...READ_ROLES), listRevisions);

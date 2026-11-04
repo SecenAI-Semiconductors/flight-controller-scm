@@ -10,7 +10,6 @@ import FormField from '../../components/FormField';
 import Button from '../../components/Button';
 import StatusBadge from '../../components/StatusBadge';
 import EmptyState from '../../components/EmptyState';
-import { SHOW_PARTS_SUPPLIERS } from '../../config/features';
 
 const WRITE_ROLES = ['admin', 'supply_chain'];
 
@@ -41,26 +40,6 @@ function toFormValues(part) {
 }
 
 export default function Parts() {
-  // ── Feature flag: show placeholder when SHOW_PARTS_SUPPLIERS is false ──────
-  if (!SHOW_PARTS_SUPPLIERS) {
-    return (
-      <div>
-        <PageHeader
-          title="Parts"
-          subtitle="Component master data for BOMs and procurement."
-        />
-        <EmptyState
-          title="Coming next"
-          description={
-            'Parts master (part number, name, unit cost, default supplier)\n' +
-            'feeding product BOMs.'
-          }
-        />
-      </div>
-    );
-  }
-
-  // ── Live page (original code — untouched) ───────────────────────────────────
   const { user } = useAuth();
   const canWrite = WRITE_ROLES.includes(user?.role);
 
@@ -158,16 +137,16 @@ export default function Parts() {
     }
   };
 
-  const handleSort = (key, order) => {
+  const handleSort = useCallback((key, order) => {
     setSortBy(key);
     setSortOrder(order);
     setPage(1);
-  };
+  }, []);
 
-  const handleSearch = (value) => {
+  const handleSearch = useCallback((value) => {
     setSearch(value);
     setPage(1);
-  };
+  }, []);
 
   // ── Columns ────────────────────────────────────────────────────────────────
   const columns = [

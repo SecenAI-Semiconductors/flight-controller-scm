@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const supplierRoutes = require('./routes/suppliers');
 const partRoutes = require('./routes/parts');
 const productRoutes = require('./routes/products');
+const inventoryRoutes = require('./routes/inventory');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api', auth);
 app.use('/api/admin/suppliers', supplierRoutes);
 app.use('/api/admin/parts', partRoutes);
 app.use('/api/admin/products', productRoutes);
+app.use('/api/admin/inventory', inventoryRoutes);
 
 
 // ── Health check (protected — behind auth wall) ───────────

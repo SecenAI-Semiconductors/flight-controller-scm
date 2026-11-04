@@ -9,9 +9,7 @@ import FormField from '../../components/FormField';
 import Button from '../../components/Button';
 import StatusBadge from '../../components/StatusBadge';
 import EmptyState from '../../components/EmptyState';
-import { SHOW_PARTS_SUPPLIERS } from '../../config/features';
 
-// Roles that may write
 const WRITE_ROLES = ['admin', 'supply_chain'];
 
 const EMPTY_FORM = {
@@ -39,26 +37,6 @@ function toFormValues(supplier) {
 }
 
 export default function Suppliers() {
-  // ── Feature flag: show placeholder when SHOW_PARTS_SUPPLIERS is false ──────
-  if (!SHOW_PARTS_SUPPLIERS) {
-    return (
-      <div>
-        <PageHeader
-          title="Suppliers"
-          subtitle="Supplier master data for procurement and parts sourcing."
-        />
-        <EmptyState
-          title="Coming next"
-          description={
-            'Supplier directory (name, code, contact, lead days, active status)\n' +
-            'and supplier-to-part linking.'
-          }
-        />
-      </div>
-    );
-  }
-
-  // ── Live page (original code — untouched) ───────────────────────────────────
   const { user } = useAuth();
   const canWrite = WRITE_ROLES.includes(user?.role);
 
@@ -144,16 +122,16 @@ export default function Suppliers() {
     }
   };
 
-  const handleSort = (key, order) => {
+  const handleSort = useCallback((key, order) => {
     setSortBy(key);
     setSortOrder(order);
     setPage(1);
-  };
+  }, []);
 
-  const handleSearch = (value) => {
+  const handleSearch = useCallback((value) => {
     setSearch(value);
     setPage(1);
-  };
+  }, []);
 
   // ── Columns ────────────────────────────────────────────────────────────────
   const columns = [

@@ -29,6 +29,7 @@ export const productsApi = {
   create: (data) => api.post('/admin/products', data),
   update: (id, data) => api.patch(`/admin/products/${id}`, data),
   deactivate: (id) => api.patch(`/admin/products/${id}/deactivate`),
+  activate:   (id) => api.patch(`/admin/products/${id}/activate`),
 
   // Revisions
   listRevisions: (productId, params) => api.get(`/admin/products/${productId}/revisions`, { params }),
@@ -43,5 +44,14 @@ export const productsApi = {
   addBomLine: (productId, revId, data) => api.post(`/admin/products/${productId}/revisions/${revId}/bom`, data),
   updateBomLine: (productId, revId, lineId, data) => api.patch(`/admin/products/${productId}/revisions/${revId}/bom/${lineId}`, data),
   removeBomLine: (productId, revId, lineId) => api.delete(`/admin/products/${productId}/revisions/${revId}/bom/${lineId}`),
+};
+
+// ── Inventory ─────────────────────────────────────────────────────────────────
+
+export const inventoryApi = {
+  postMovement: (data) => api.post('/admin/inventory/movements', data),
+  getStock: (params) => api.get('/admin/inventory/stock', { params }),
+  getPartMovements: (partId, params) =>
+    api.get(`/admin/inventory/parts/${partId}/movements`, { params }),
 };
 

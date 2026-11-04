@@ -3,6 +3,9 @@ const ProductRevision = require('../models/ProductRevision');
 const BomLine = require('../models/BomLine');
 const Part = require('../models/Part');
 const Supplier = require('../models/Supplier');
+// User must be required here so Mongoose has the schema registered before
+// getRevision calls .populate('approver', 'email role').
+const User = require('../models/User');
 const { parsePagination, paginatedResponse } = require('../utils/pagination');
 
 // ── List ──────────────────────────────────────────────────────────────────────
@@ -58,6 +61,20 @@ async function deactivateProduct(req, res) {
   const product = await Product.findByIdAndUpdate(
     req.params.id,
     { $set: { active: false } },
+    { new: true }
+  ).lean();
+
+  if (!product) {
+    return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Product not found' } });
+  }
+  res.json(product);
+}
+
+// ── Activate (reverse soft-delete) ────────────────────────────────────────────
+async function activateProduct(req, res) {
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    { $set: { active: true } },
     { new: true }
   ).lean();
 
@@ -432,6 +449,7 @@ module.exports = {
   createProduct,
   updateProduct,
   deactivateProduct,
+  activateProduct,
   listRevisions,
   getRevision,
   createRevision,

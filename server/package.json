@@ -12,7 +12,9 @@
     "seed:data": "node scripts/seed-data.js",
     "clear:sample": "node scripts/clear-sample-data.js",
     "seed:demo": "node scripts/seed-demo-products.js",
-    "clear:demo": "node scripts/seed-demo-products.js --clear"
+    "clear:demo": "node scripts/seed-demo-products.js --clear",
+    "inventory:check": "node scripts/check-inventory.js",
+    "clear:inventory-test": "node scripts/clear-test-inventory.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

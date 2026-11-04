@@ -36,6 +36,10 @@ const STATUS_COLOR_MAP = {
   // Revision statuses
   released: 'success',
   obsolete: 'neutral',
+  // Inventory movement types
+  receipt: 'success',
+  issue: 'warning',
+  adjustment: 'info',
 };
 
 /**
